@@ -19,7 +19,7 @@ import tf_metrics
 import pickle
 import shutil
 
-flags = tf.flags
+flags = tf.compat.v1.app.flags
 
 FLAGS = flags.FLAGS
 
@@ -93,7 +93,7 @@ flags.DEFINE_integer("iterations_per_loop", 1000,
 flags.DEFINE_string("vocab_file", None,
                     "The vocabulary file that the BERT model was trained on.")
 
-tf.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
+tf.compat.v1.app.flags.DEFINE_string("master", None, "[Optional] TensorFlow master URL.")
 
 flags.DEFINE_integer("num_tpu_cores", 8,
                      "Only used if `use_tpu` is True. Total number of TPU cores to use.")
@@ -181,10 +181,10 @@ class Atis_Slot_Filling_Processor(DataProcessor):
                 label_set = label_set | set(seq_word_list)
         label_list = list(label_set)
         label_list.sort()
-        return ["[Padding]", "[##WordPiece]", "[CLS]", "[SEP]"] + label_list
+        return ["[Padding]", "[##WordPiece]", "[CLS]", "[SEP]" , "PSEUDOCODE", "O"] + label_list
 
     def get_labels(self):
-        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]', 'B-aircraft_code', 'B-airline_code', 'B-airline_name', 'B-airport_code', 'B-airport_name', 'B-arrive_date.date_relative', 'B-arrive_date.day_name', 'B-arrive_date.day_number', 'B-arrive_date.month_name', 'B-arrive_date.today_relative', 'B-arrive_time.end_time', 'B-arrive_time.period_mod', 'B-arrive_time.period_of_day', 'B-arrive_time.start_time', 'B-arrive_time.time', 'B-arrive_time.time_relative', 'B-booking_class', 'B-city_name', 'B-class_type', 'B-compartment', 'B-connect', 'B-cost_relative', 'B-day_name', 'B-day_number', 'B-days_code', 'B-depart_date.date_relative', 'B-depart_date.day_name', 'B-depart_date.day_number', 'B-depart_date.month_name', 'B-depart_date.today_relative', 'B-depart_date.year', 'B-depart_time.end_time', 'B-depart_time.period_mod', 'B-depart_time.period_of_day', 'B-depart_time.start_time', 'B-depart_time.time', 'B-depart_time.time_relative', 'B-economy', 'B-fare_amount', 'B-fare_basis_code', 'B-flight', 'B-flight_days', 'B-flight_mod', 'B-flight_number', 'B-flight_stop', 'B-flight_time', 'B-fromloc.airport_code', 'B-fromloc.airport_name', 'B-fromloc.city_name', 'B-fromloc.state_code', 'B-fromloc.state_name', 'B-meal', 'B-meal_code', 'B-meal_description', 'B-mod', 'B-month_name', 'B-or', 'B-period_of_day', 'B-restriction_code', 'B-return_date.date_relative', 'B-return_date.day_name', 'B-return_date.day_number', 'B-return_date.month_name', 'B-return_date.today_relative', 'B-return_time.period_mod', 'B-return_time.period_of_day', 'B-round_trip', 'B-state_code', 'B-state_name', 'B-stoploc.airport_code', 'B-stoploc.airport_name', 'B-stoploc.city_name', 'B-stoploc.state_code', 'B-time', 'B-time_relative', 'B-today_relative', 'B-toloc.airport_code', 'B-toloc.airport_name', 'B-toloc.city_name', 'B-toloc.country_name', 'B-toloc.state_code', 'B-toloc.state_name', 'B-transport_type', 'I-airline_name', 'I-airport_name', 'I-arrive_date.day_number', 'I-arrive_time.end_time', 'I-arrive_time.period_of_day', 'I-arrive_time.start_time', 'I-arrive_time.time', 'I-arrive_time.time_relative', 'I-city_name', 'I-class_type', 'I-cost_relative', 'I-depart_date.day_number', 'I-depart_date.today_relative', 'I-depart_time.end_time', 'I-depart_time.period_of_day', 'I-depart_time.start_time', 'I-depart_time.time', 'I-depart_time.time_relative', 'I-economy', 'I-fare_amount', 'I-fare_basis_code', 'I-flight_mod', 'I-flight_number', 'I-flight_stop', 'I-flight_time', 'I-fromloc.airport_name', 'I-fromloc.city_name', 'I-fromloc.state_name', 'I-meal_code', 'I-meal_description', 'I-restriction_code', 'I-return_date.date_relative', 'I-return_date.day_number', 'I-return_date.today_relative', 'I-round_trip', 'I-state_name', 'I-stoploc.city_name', 'I-time', 'I-today_relative', 'I-toloc.airport_name', 'I-toloc.city_name', 'I-toloc.state_name', 'I-transport_type', 'O']
+        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]' , 'PSEUDOCODE', 'O']
 
     def _create_example(self, lines, set_type):
         examples = []
@@ -234,7 +234,7 @@ class CoNLL2003NERProcessor(DataProcessor):
             self.get_examples(os.path.join(data_dir, "test.txt")), "test")
 
     def get_labels(self):
-        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]', "B-MISC", "I-MISC", "O", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC"]
+        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]', "PSEUDOCODE", "O"]
 
     def _create_example(self, lines, set_type):
         examples = []
@@ -281,10 +281,10 @@ class Snips_Slot_Filling_Processor(DataProcessor):
                 label_set = label_set | set(seq_word_list)
         label_list = list(label_set)
         label_list.sort()
-        return ["[Padding]", "[##WordPiece]", "[CLS]", "[SEP]"] + label_list
+        return ["[Padding]", "[##WordPiece]", "[CLS]", "[SEP]" , "PSEUDOCODE", "O"] + label_list
 
     def get_labels(self):
-        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]', 'B-album', 'B-artist', 'B-best_rating', 'B-city', 'B-condition_description', 'B-condition_temperature', 'B-country', 'B-cuisine', 'B-current_location', 'B-entity_name', 'B-facility', 'B-genre', 'B-geographic_poi', 'B-location_name', 'B-movie_name', 'B-movie_type', 'B-music_item', 'B-object_location_type', 'B-object_name', 'B-object_part_of_series_type', 'B-object_select', 'B-object_type', 'B-party_size_description', 'B-party_size_number', 'B-playlist', 'B-playlist_owner', 'B-poi', 'B-rating_unit', 'B-rating_value', 'B-restaurant_name', 'B-restaurant_type', 'B-served_dish', 'B-service', 'B-sort', 'B-spatial_relation', 'B-state', 'B-timeRange', 'B-track', 'B-year', 'I-album', 'I-artist', 'I-city', 'I-country', 'I-cuisine', 'I-current_location', 'I-entity_name', 'I-facility', 'I-genre', 'I-geographic_poi', 'I-location_name', 'I-movie_name', 'I-movie_type', 'I-music_item', 'I-object_location_type', 'I-object_name', 'I-object_part_of_series_type', 'I-object_select', 'I-object_type', 'I-party_size_description', 'I-playlist', 'I-playlist_owner', 'I-poi', 'I-restaurant_name', 'I-restaurant_type', 'I-served_dish', 'I-service', 'I-sort', 'I-spatial_relation', 'I-state', 'I-timeRange', 'I-track', 'O']
+        return ['[Padding]', '[##WordPiece]', '[CLS]', '[SEP]', "PSEUDOCODE", "O"]
 
     def _create_example(self, lines, set_type):
         examples = []
@@ -353,15 +353,15 @@ def convert_single_example(ex_index, example, label_list, max_seq_length, tokeni
     # assert len(label_mask) == max_seq_length
 
     if ex_index < 5:
-        tf.logging.info("*** Example ***")
-        tf.logging.info("guid: %s" % (example.guid))
-        tf.logging.info("tokens: %s" % " ".join(
+        tf.compat.v1.logging.info("*** Example ***")
+        tf.compat.v1.logging.info("guid: %s" % (example.guid))
+        tf.compat.v1.logging.info("tokens: %s" % " ".join(
             [tokenization.printable_text(x) for x in tokens]))
-        tf.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
-        tf.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
-        tf.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
-        tf.logging.info("label_ids: %s" % " ".join([str(x) for x in label_ids]))
-        # tf.logging.info("label_mask: %s" % " ".join([str(x) for x in label_mask]))
+        tf.compat.v1.logging.info("input_ids: %s" % " ".join([str(x) for x in input_ids]))
+        tf.compat.v1.logging.info("input_mask: %s" % " ".join([str(x) for x in input_mask]))
+        tf.compat.v1.logging.info("segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
+        tf.compat.v1.logging.info("label_ids: %s" % " ".join([str(x) for x in label_ids]))
+        # tf.compat.v1.logging.info("label_mask: %s" % " ".join([str(x) for x in label_mask]))
 
     feature = InputFeatures(
         input_ids=input_ids,
@@ -386,10 +386,10 @@ def write_tokens(tokens, mode):
 
 def filed_based_convert_examples_to_features(
         examples, label_list, max_seq_length, tokenizer, output_file, mode=None):
-    writer = tf.python_io.TFRecordWriter(output_file)
+    writer = tf.io.TFRecordWriter(output_file)
     for (ex_index, example) in enumerate(examples):
         if ex_index % 5000 == 0:
-            tf.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
+            tf.compat.v1.logging.info("Writing example %d of %d" % (ex_index, len(examples)))
         feature = convert_single_example(ex_index, example, label_list, max_seq_length, tokenizer, mode)
 
         def create_int_feature(values):
@@ -488,9 +488,9 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
                      num_train_steps, num_warmup_steps, use_tpu,
                      use_one_hot_embeddings):
     def model_fn(features, labels, mode, params):
-        tf.logging.info("*** Features ***")
+        tf.compat.v1.logging.info("*** Features ***")
         for name in sorted(features.keys()):
-            tf.logging.info("  name = %s, shape = %s" % (name, features[name].shape))
+            tf.compat.v1.logging.info("  name = %s, shape = %s" % (name, features[name].shape))
         input_ids = features["input_ids"]
         input_mask = features["input_mask"]
         segment_ids = features["segment_ids"]
@@ -514,13 +514,13 @@ def model_fn_builder(bert_config, num_labels, init_checkpoint, learning_rate,
                 scaffold_fn = tpu_scaffold
             else:
                 tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
-        tf.logging.info("**** Trainable Variables ****")
+        tf.compat.v1.logging.info("**** Trainable Variables ****")
 
         for var in tvars:
             init_string = ""
             if var.name in initialized_variable_names:
                 init_string = ", *INIT_FROM_CKPT*"
-            tf.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
+            tf.compat.v1.logging.info("  name = %s, shape = %s%s", var.name, var.shape,
                             init_string)
         output_spec = None
         if mode == tf.estimator.ModeKeys.TRAIN:
@@ -574,18 +574,18 @@ def main(_):
     # ----------------for test------------------
     if os.path.exists(FLAGS.output_dir):
         try:
-            os.removedirs(FLAGS.output_dir)
+            # os.removedirs(FLAGS.output_dir)
             os.makedirs(FLAGS.output_dir)
         except:
-            tf.logging.info("***** Running evaluation *****")
-            tf.logging.warning(FLAGS.output_dir + " is  not empty, here use shutil.rmtree(FLAGS.output_dir)!")
+            tf.compat.v1.logging.info("***** Running evaluation *****")
+            tf.compat.v1.logging.warning(FLAGS.output_dir + " is  not empty, here use shutil.rmtree(FLAGS.output_dir)!")
             shutil.rmtree(FLAGS.output_dir)
             os.makedirs(FLAGS.output_dir)
     else:
         os.makedirs(FLAGS.output_dir)
     # ----------------for test------------------
 
-    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     processors = {
         "atis": Atis_Slot_Filling_Processor,
         "snips": Snips_Slot_Filling_Processor,
@@ -621,14 +621,14 @@ def main(_):
         tpu_cluster_resolver = tf.contrib.cluster_resolver.TPUClusterResolver(
             FLAGS.tpu_name, zone=FLAGS.tpu_zone, project=FLAGS.gcp_project)
 
-    is_per_host = tf.contrib.tpu.InputPipelineConfig.PER_HOST_V2
+    is_per_host = tf.compat.v1.estimator.tpu.InputPipelineConfig.PER_HOST_V2
 
-    run_config = tf.contrib.tpu.RunConfig(
+    run_config = tf.compat.v1.estimator.tpu.RunConfig(
         cluster=tpu_cluster_resolver,
         master=FLAGS.master,
         model_dir=FLAGS.output_dir,
         save_checkpoints_steps=FLAGS.save_checkpoints_steps,
-        tpu_config=tf.contrib.tpu.TPUConfig(
+        tpu_config=tf.compat.v1.estimator.tpu.TPUConfig(
             iterations_per_loop=FLAGS.iterations_per_loop,
             num_shards=FLAGS.num_tpu_cores,
             per_host_input_for_training=is_per_host))
@@ -653,7 +653,7 @@ def main(_):
         use_tpu=FLAGS.use_tpu,
         use_one_hot_embeddings=FLAGS.use_tpu)
 
-    estimator = tf.contrib.tpu.TPUEstimator(
+    estimator = tf.compat.v1.estimator.tpu.TPUEstimator(
         use_tpu=FLAGS.use_tpu,
         model_fn=model_fn,
         config=run_config,
@@ -665,10 +665,10 @@ def main(_):
         train_file = os.path.join(FLAGS.output_dir, "train.tf_record")
         filed_based_convert_examples_to_features(
             train_examples, label_list, FLAGS.max_seq_length, tokenizer, train_file)
-        tf.logging.info("***** Running training *****")
-        tf.logging.info("  Num examples = %d", len(train_examples))
-        tf.logging.info("  Batch size = %d", FLAGS.train_batch_size)
-        tf.logging.info("  Num steps = %d", num_train_steps)
+        tf.compat.v1.logging.info("***** Running training *****")
+        tf.compat.v1.logging.info("  Num examples = %d", len(train_examples))
+        tf.compat.v1.logging.info("  Batch size = %d", FLAGS.train_batch_size)
+        tf.compat.v1.logging.info("  Num steps = %d", num_train_steps)
         train_input_fn = file_based_input_fn_builder(
             input_file=train_file,
             seq_length=FLAGS.max_seq_length,
@@ -681,9 +681,9 @@ def main(_):
         filed_based_convert_examples_to_features(
             eval_examples, label_list, FLAGS.max_seq_length, tokenizer, eval_file)
 
-        tf.logging.info("***** Running evaluation *****")
-        tf.logging.info("  Num examples = %d", len(eval_examples))
-        tf.logging.info("  Batch size = %d", FLAGS.eval_batch_size)
+        tf.compat.v1.logging.info("***** Running evaluation *****")
+        tf.compat.v1.logging.info("  Num examples = %d", len(eval_examples))
+        tf.compat.v1.logging.info("  Batch size = %d", FLAGS.eval_batch_size)
         eval_steps = None
         if FLAGS.use_tpu:
             eval_steps = int(len(eval_examples) / FLAGS.eval_batch_size)
@@ -696,9 +696,9 @@ def main(_):
         result = estimator.evaluate(input_fn=eval_input_fn, steps=eval_steps)
         output_eval_file = os.path.join(FLAGS.output_dir, "eval_results.txt")
         with open(output_eval_file, "w") as writer:
-            tf.logging.info("***** Eval results *****")
+            tf.compat.v1.logging.info("***** Eval results *****")
             for key in sorted(result.keys()):
-                tf.logging.info("  %s = %s", key, str(result[key]))
+                tf.compat.v1.logging.info("  %s = %s", key, str(result[key]))
                 writer.write("%s = %s\n" % (key, str(result[key])))
     if FLAGS.do_predict:
         token_path = os.path.join(FLAGS.output_dir, "token_test.txt")
@@ -709,9 +709,9 @@ def main(_):
                                                  FLAGS.max_seq_length, tokenizer,
                                                  predict_file, mode="test")
 
-        tf.logging.info("***** Running prediction*****")
-        tf.logging.info("  Num examples = %d", len(predict_examples))
-        tf.logging.info("  Batch size = %d", FLAGS.predict_batch_size)
+        tf.compat.v1.logging.info("***** Running prediction*****")
+        tf.compat.v1.logging.info("  Num examples = %d", len(predict_examples))
+        tf.compat.v1.logging.info("  Batch size = %d", FLAGS.predict_batch_size)
         if FLAGS.use_tpu:
             # Warning: According to tpu_estimator.py Prediction on TPU is an
             # experimental feature and hence not supported here
@@ -737,6 +737,6 @@ if __name__ == "__main__":
     flags.mark_flag_as_required("vocab_file")
     flags.mark_flag_as_required("bert_config_file")
     flags.mark_flag_as_required("output_dir")
-    tf.app.run()
+    tf.compat.v1.app.run()
 
 
